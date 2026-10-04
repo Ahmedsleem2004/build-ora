@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-const Hero = () => {
+const Hero = ({ isReady }) => {
   const videoRef = useRef(null);
   const titleRef = useRef(null);
   const overlayRef = useRef(null);
@@ -9,12 +9,15 @@ const Hero = () => {
   const captionRef = useRef(null);
 
   useEffect(() => {
+    if (!isReady) return;
+
     const video = videoRef.current;
 
     const animateHero = () => {
+      video.currentTime = 0;
+
       const tl = gsap.timeline();
 
-      // Initial state
       gsap.set(video, {
         opacity: 0,
         filter: "blur(0px)",
@@ -36,70 +39,66 @@ const Hero = () => {
         y: 15,
       });
 
-      // Video entrance
-      tl.to(video, {
-        opacity: 1,
-        duration: 1.8,
-        ease: "power3.out",
-      })
-
-        // Company name
-        .to(
-          titleRef.current,
-          {
+      video
+        .play()
+        .then(() => {
+          tl.to(video, {
             opacity: 1,
-            y: 0,
-            letterSpacing: "0.14em",
-            duration: 1.7,
-            ease: "power4.out",
-          },
-          "-=0.8"
-        )
-
-        // Small line
-        .to(
-          lineRef.current,
-          {
-            scaleX: 1,
-            duration: 1,
-            ease: "power3.inOut",
-          },
-          "-=0.8"
-        )
-
-        // Caption
-        .to(
-          captionRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out",
-          },
-          "-=0.5"
-        )
-
-        // Darken the video
-        .to(
-          overlayRef.current,
-          {
-            opacity: 0.42,
-            duration: 1.4,
-            ease: "power2.inOut",
-          },
-          "-=0.5"
-        )
-
-        // Slight cinematic blur
-        .to(
-          video,
-          {
-            filter: "blur(4px)",
-            duration: 2,
-            ease: "power2.inOut",
-          },
-          "+=0.4"
-        );
+            duration: 1.8,
+            ease: "power3.out",
+          })
+            .to(
+              titleRef.current,
+              {
+                opacity: 1,
+                y: 0,
+                letterSpacing: "0.14em",
+                duration: 1.7,
+                ease: "power4.out",
+              },
+              "-=0.8"
+            )
+            .to(
+              lineRef.current,
+              {
+                scaleX: 1,
+                duration: 1,
+                ease: "power3.inOut",
+              },
+              "-=0.8"
+            )
+            .to(
+              captionRef.current,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+              },
+              "-=0.5"
+            )
+            .to(
+              overlayRef.current,
+              {
+                opacity: 0.42,
+                duration: 1.4,
+                ease: "power2.inOut",
+              },
+              "-=0.5"
+            )
+            .to(
+              video,
+              {
+                filter: "blur(4px)",
+                duration: 2,
+                ease: "power2.inOut",
+              },
+              "+=0.4"
+            );
+        })
+        .catch((error) => {
+          console.error("Video playback failed:", error);
+        });
     };
 
     if (video.readyState >= 2) {
@@ -111,17 +110,15 @@ const Hero = () => {
     return () => {
       video.removeEventListener("loadeddata", animateHero);
     };
-  }, []);
+  }, [isReady]);
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
-      {/* VIDEO */}
       <div className="absolute inset-0 overflow-hidden">
         <video
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           src="/videos/buildora-hero.mp4"
-          autoPlay
           muted
           loop
           playsInline
@@ -129,16 +126,13 @@ const Hero = () => {
         />
       </div>
 
-      {/* DARK OVERLAY */}
       <div
         ref={overlayRef}
         className="pointer-events-none absolute inset-0 z-[1] bg-black opacity-20"
       />
 
-      {/* CINEMATIC GRADIENT */}
       <div className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(to_bottom,rgba(0,0,0,0.25),transparent_35%,rgba(0,0,0,0.85))]" />
 
-      {/* CENTER CONTENT */}
       <div className="pointer-events-none absolute inset-0 z-[10] flex items-center justify-center px-5">
         <div className="flex flex-col items-center text-center">
           <h1
@@ -182,7 +176,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* BOTTOM INFO */}
       <div className="pointer-events-none absolute bottom-7 left-0 z-[10] flex w-full justify-between px-6 sm:px-10 md:px-14">
         <span className="text-[9px] uppercase tracking-[0.3em] text-white/50">
           EST. 2026

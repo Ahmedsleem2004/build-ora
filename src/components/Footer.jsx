@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ArrowUpRight } from "lucide-react";
@@ -115,17 +114,19 @@ const Footer = () => {
 
             <div className="mt-6 space-y-4">
               <a
-                href="mailto:info@buildora.com"
+                href="mailto:eelbarbary92@gmail.com"
                 className="block text-xs text-white/45 transition-colors duration-300 hover:text-white"
               >
-                info@buildora.com
+                eelbarbary92@gmail.com
               </a>
 
               <a
-                href="tel:+201000000000"
+                href="https://wa.me/201065199211"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block text-xs text-white/45 transition-colors duration-300 hover:text-white"
               >
-                +20 100 000 0000
+                01065199211
               </a>
 
               <span className="block text-xs text-white/45">
@@ -200,4 +201,3 @@ const Footer = () => {
 };
 
 export default Footer;
-

@@ -1,3 +1,4 @@
+import { useState } from "react";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -6,28 +7,40 @@ import Projects from "./components/Projects";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import Loader from "./components/Loader";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
   return (
-    <main className="w-full overflow-x-hidden bg-black">
-      <Navbar />
+    <>
+      {loading && (
+        <Loader
+          onComplete={() => {
+            setLoading(false);
+          }}
+        />
+      )}
 
-      <div id="home">
-        <Hero />
-      </div>
+      <main className="w-full overflow-x-hidden bg-black">
+        <Navbar />
 
-      <About />
+        <div id="home">
+          <Hero isReady={!loading} />
+        </div>
 
-      <Projects />
+        <About />
 
-      <Services />
+        <Projects />
 
-      <Contact />
+        <Services />
 
-      <Footer />
-    </main>
+        <Contact />
+
+        <Footer />
+      </main>
+    </>
   );
 }
 
 export default App;
-
